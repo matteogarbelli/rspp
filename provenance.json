@@ -1,0 +1,275 @@
+{
+  "origin": "Standalone synthetic research implementation from the manuscript project; no industrial repository files copied.",
+  "files": [
+    {
+      "file": "experiments/rspp/algorithm.py",
+      "source": "experiments/rspp/algorithm.py",
+      "sha256": "1e9c0665f9d35ea579914b1c931308a7644bf8cf21ae2fc47295c47375643c89"
+    },
+    {
+      "file": "experiments/rspp/instance.py",
+      "source": "experiments/rspp/instance.py",
+      "sha256": "1cf42b438db19f4a1b745de5d6018f1defa7a55a64ab7c8e2f64a4d81dedad03"
+    },
+    {
+      "file": "experiments/rspp/heuristics.py",
+      "source": "experiments/rspp/heuristics.py",
+      "sha256": "9d872a6f146b92523c3f03f52dd8bc5243feba64a6f74d656bae055a531f0c34"
+    },
+    {
+      "file": "experiments/rspp/solution.py",
+      "source": "experiments/rspp/solution.py",
+      "sha256": "97e63a404553fa0bb7724e22f0ee764f4fb40d26510a109be4dc9d255f3af7b0"
+    },
+    {
+      "file": "experiments/rspp/__init__.py",
+      "source": "experiments/rspp/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "experiments/rspp/selftest.py",
+      "source": "experiments/rspp/selftest.py",
+      "sha256": "9f8737ea08215d9a2e42af641c11c5c4bb52efe88a725e6df1a19da867fd7cc3"
+    },
+    {
+      "file": "experiments/rspp/moea.py",
+      "source": "experiments/rspp/moea.py",
+      "sha256": "e33df777f66bbe0293e5aeedc6b0e9b133b1b0a53259ccd9f01317ea73ad0919"
+    },
+    {
+      "file": "experiments/rspp/geometry.py",
+      "source": "experiments/rspp/geometry.py",
+      "sha256": "4802adb72bedddaacef12ebb6078af11dba1a61cef105a14b22b320f2744a7b8"
+    },
+    {
+      "file": "experiments/rspp/kernels.py",
+      "source": "experiments/rspp/kernels.py",
+      "sha256": "a71a63dde3bf95e0606d00f3953843e0e4fae15873b5bb5b4a84e4b4eb7ac24d"
+    },
+    {
+      "file": "experiments/rspp/kernels.c",
+      "source": "experiments/rspp/kernels.c",
+      "sha256": "888db051987823b9b6e32428a49fac6db029a79c8a7b93257d34a92300f385e1"
+    },
+    {
+      "file": "experiments/rsppbench/generate.py",
+      "source": "experiments/rsppbench/generate.py",
+      "sha256": "7dedcf2a0890ec2b0f95b86a779470ffe7ebbd26beb3f65b5e40874439f3656d"
+    },
+    {
+      "file": "experiments/rsppbench/__init__.py",
+      "source": "experiments/rsppbench/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "experiments/campaign/run.py",
+      "source": "experiments/campaign/run.py",
+      "sha256": "23c62adefb659f00045ede4040a97033485f5496dc76151ff74d5c0fce7d3d7d"
+    },
+    {
+      "file": "experiments/campaign/__init__.py",
+      "source": "experiments/campaign/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "experiments/analysis/style.py",
+      "source": "experiments/analysis/style.py",
+      "sha256": "a2b6647ca2f7f0468084062be283b108fadec7ceb92660fefa0fbb2058dd92e7"
+    },
+    {
+      "file": "experiments/analysis/__init__.py",
+      "source": "experiments/analysis/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "experiments/analysis/indicators.py",
+      "source": "experiments/analysis/indicators.py",
+      "sha256": "8138e0ddb11ff0453a4f3326e1be699c3af8b9b9e535014eff1175ccb7808619"
+    },
+    {
+      "file": "experiments/analysis/figures.py",
+      "source": "experiments/analysis/figures.py",
+      "sha256": "93aa06342227ee00a7042cc80a69e05a599b911856f02a05933f9cb4d13d7049"
+    },
+    {
+      "file": "experiments/analysis/load.py",
+      "source": "experiments/analysis/load.py",
+      "sha256": "bee83b5ca05e90152419bd1c2c036f67a9590ae338f89dc60e54727e569a92cd"
+    },
+    {
+      "file": "experiments/__init__.py",
+      "source": "experiments/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "data/rsppbench/RC50-4v-INS5-s1.json",
+      "source": "data/rsppbench/RC50-4v-INS5-s1.json",
+      "sha256": "a2fc5daae0835f95b803a9a19fcb4831cdc854196fe921035ff3e54f008c7c43"
+    },
+    {
+      "file": "data/rsppbench/R200-12v-INS15-s1.json",
+      "source": "data/rsppbench/R200-12v-INS15-s1.json",
+      "sha256": "02433776ad3bbc6fdb8ddf8cf1ba2b328a744e807c909835a6c9ff3e9df2e326"
+    },
+    {
+      "file": "data/rsppbench/R100-7v-INS8-s1.json",
+      "source": "data/rsppbench/R100-7v-INS8-s1.json",
+      "sha256": "2bb9bfe28664cebec47a43129de4f12fc63e48c7ba6ff1623a0c291c2c7288e5"
+    },
+    {
+      "file": "data/rsppbench/R50-4v-SRG6-s1.json",
+      "source": "data/rsppbench/R50-4v-SRG6-s1.json",
+      "sha256": "090d02f5291fc02b47e3c019a359e2d048ae5ab927920d9a1dc6f8db66ca8878"
+    },
+    {
+      "file": "data/rsppbench/RC200-12v-WDR0-s1.json",
+      "source": "data/rsppbench/RC200-12v-WDR0-s1.json",
+      "sha256": "60c7dec2c9174818497b8085cf181437bfa901ac692e19e7509f7119860bf0ee"
+    },
+    {
+      "file": "data/rsppbench/C200-12v-INS15-s1.json",
+      "source": "data/rsppbench/C200-12v-INS15-s1.json",
+      "sha256": "b171909567da86f6f959653627153bf418156745d169c337565166df927c2c6a"
+    },
+    {
+      "file": "data/rsppbench/RC100-7v-SRG12-s1.json",
+      "source": "data/rsppbench/RC100-7v-SRG12-s1.json",
+      "sha256": "b6d8f7c67417193d8777eef377e87cffb2921db7b87892a1ab8a5610c981f31e"
+    },
+    {
+      "file": "data/rsppbench/C100-7v-WDR0-s1.json",
+      "source": "data/rsppbench/C100-7v-WDR0-s1.json",
+      "sha256": "4f46b1abb3ab1af1a31975d97610baa6dbb25305b81b559274b1cb0e1182bf3a"
+    },
+    {
+      "file": "data/rsppbench/C50-4v-WDR0-s1.json",
+      "source": "data/rsppbench/C50-4v-WDR0-s1.json",
+      "sha256": "07a3de2d20554e17322f17fe0437df0dae14acf7a8c54f90ea8948d8339e3c53"
+    },
+    {
+      "file": "data/rsppbench/R50-4v-INS5-s1.json",
+      "source": "data/rsppbench/R50-4v-INS5-s1.json",
+      "sha256": "9fbc6ceebbfc34231999b6431b71ed8678b7195446d15ec5cfe76411f098b8b5"
+    },
+    {
+      "file": "data/rsppbench/R100-7v-WDR0-s1.json",
+      "source": "data/rsppbench/R100-7v-WDR0-s1.json",
+      "sha256": "cd6bee4ebfeb8639bf5294171c838c18b4bde7b953e89d8a50d3e5e394415557"
+    },
+    {
+      "file": "data/rsppbench/RC50-4v-SRG6-s1.json",
+      "source": "data/rsppbench/RC50-4v-SRG6-s1.json",
+      "sha256": "71b8fc5ffa1449197c666303be81b83ce98267ec916dc72cff27803ef3e959bf"
+    },
+    {
+      "file": "data/rsppbench/RC400-20v-INS30-s1.json",
+      "source": "data/rsppbench/RC400-20v-INS30-s1.json",
+      "sha256": "07565b5bd08c02471ec9fc43752e668266f3a18fbe07f893c991f6a00345b0e5"
+    },
+    {
+      "file": "data/rsppbench/RC200-12v-SRG24-s1.json",
+      "source": "data/rsppbench/RC200-12v-SRG24-s1.json",
+      "sha256": "b5e5275ec3a271b1c2339f9e04b0736f9ad32ca92380e364558ee52dbf750e60"
+    },
+    {
+      "file": "data/rsppbench/C100-7v-INS8-s1.json",
+      "source": "data/rsppbench/C100-7v-INS8-s1.json",
+      "sha256": "110e55604b2c745579ec8841220b1bb97f3ad9bb21018c7656b9f030aefd69f3"
+    },
+    {
+      "file": "data/rsppbench/RC50-4v-WDR0-s1.json",
+      "source": "data/rsppbench/RC50-4v-WDR0-s1.json",
+      "sha256": "c25db437ece9826ad65a78f6ea77bf269e161c76b66c50721c896a0e5d9eba58"
+    },
+    {
+      "file": "data/rsppbench/C400-20v-INS30-s1.json",
+      "source": "data/rsppbench/C400-20v-INS30-s1.json",
+      "sha256": "753698c737122ce9d68d39d2e473c7bbb7e3f0116db146c3fecf9d019e935d7d"
+    },
+    {
+      "file": "data/rsppbench/C50-4v-SRG6-s1.json",
+      "source": "data/rsppbench/C50-4v-SRG6-s1.json",
+      "sha256": "1dcf0af205b0ec7c38419d0e0287f5bd8fd87ac5d5f5125db7c3a3e33d90f1da"
+    },
+    {
+      "file": "data/rsppbench/C200-12v-SRG24-s1.json",
+      "source": "data/rsppbench/C200-12v-SRG24-s1.json",
+      "sha256": "0a345f1af01d9afd9b3ffce202a30df4a00d24da6903f022323e625f232eb36d"
+    },
+    {
+      "file": "data/rsppbench/R100-7v-SRG12-s1.json",
+      "source": "data/rsppbench/R100-7v-SRG12-s1.json",
+      "sha256": "36923b225079c9e23c4d1f0a0cbe4abb0288312cfdfa57c24182169218d8f1e1"
+    },
+    {
+      "file": "data/rsppbench/RC100-7v-INS8-s1.json",
+      "source": "data/rsppbench/RC100-7v-INS8-s1.json",
+      "sha256": "1d738cf7a7bf9c31306651baa5e0a8e416ee57c48aead472736821a32ec0ef8d"
+    },
+    {
+      "file": "data/rsppbench/C100-7v-SRG12-s1.json",
+      "source": "data/rsppbench/C100-7v-SRG12-s1.json",
+      "sha256": "b42ae4af3c749ab22d007efd6001ef1237033e4b06613afd0888c3f585299509"
+    },
+    {
+      "file": "data/rsppbench/C200-12v-WDR0-s1.json",
+      "source": "data/rsppbench/C200-12v-WDR0-s1.json",
+      "sha256": "95e4e3663328f4b1d89b66acc88c1206a36ddf5708e06629c0212b286917f360"
+    },
+    {
+      "file": "data/rsppbench/R400-20v-INS30-s1.json",
+      "source": "data/rsppbench/R400-20v-INS30-s1.json",
+      "sha256": "df235e51d371cf816f2d1495e5f921bebe0686182e06d467128797688661da1a"
+    },
+    {
+      "file": "data/rsppbench/R200-12v-WDR0-s1.json",
+      "source": "data/rsppbench/R200-12v-WDR0-s1.json",
+      "sha256": "4805ddd66997831830ac02a9d45bd120941799d9e21d919bbe20c173f7f550fe"
+    },
+    {
+      "file": "data/rsppbench/MANIFEST.json",
+      "source": "data/rsppbench/MANIFEST.json",
+      "sha256": "80e7942570dc44b24de890445fdcc870fa30d465256664b2961735313b883f6c"
+    },
+    {
+      "file": "data/rsppbench/R200-12v-SRG24-s1.json",
+      "source": "data/rsppbench/R200-12v-SRG24-s1.json",
+      "sha256": "169a75ab5ff246d838fbc6efbf1a4bbc41c529609a84f0bcea5c6a3d5eda2446"
+    },
+    {
+      "file": "data/rsppbench/RC100-7v-WDR0-s1.json",
+      "source": "data/rsppbench/RC100-7v-WDR0-s1.json",
+      "sha256": "82acd76319cd3b2b6308ec96ea433b5268ec231ff8e54963794ad66286b89c31"
+    },
+    {
+      "file": "data/rsppbench/RC200-12v-INS15-s1.json",
+      "source": "data/rsppbench/RC200-12v-INS15-s1.json",
+      "sha256": "4aec3161140f8c184a30e67b0e54e03b480907d8d5642aa48f8bfba71c73b015"
+    },
+    {
+      "file": "data/rsppbench/C50-4v-INS5-s1.json",
+      "source": "data/rsppbench/C50-4v-INS5-s1.json",
+      "sha256": "7abcdd49586760704fe3d70757a75a56b12f9f12cbff07ae568bd1c866c2b481"
+    },
+    {
+      "file": "data/rsppbench/R50-4v-WDR0-s1.json",
+      "source": "data/rsppbench/R50-4v-WDR0-s1.json",
+      "sha256": "0116c6e1c20e655a2688ec4ca2764af48906e45a949263c1e99b8189b520a6fe"
+    },
+    {
+      "file": "experiments/results/campaign.jsonl.gz",
+      "source": "experiments/results/campaign.jsonl.gz",
+      "sha256": "866221dcf93383876e30c8648dd98c43b552d7777f4d99ef5aac8526ab2d26e0"
+    },
+    {
+      "file": "experiments/results/environment.json",
+      "source": "experiments/results/environment.json",
+      "sha256": "abcebec13b61cf11819f99b1339f56064f3adf88ac377bdfa8f0010ac5d0ea32"
+    },
+    {
+      "file": "experiments/results/selftest.json",
+      "source": "experiments/results/selftest.json",
+      "sha256": "c1a6a619cfc2bcce8431eb8d3a51e1696da5b7e0ac9ea97427cce99c327c8355"
+    }
+  ]
+}

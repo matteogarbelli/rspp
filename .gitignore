@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.so
+*.dylib
+.DS_Store
+outputs/
+experiments/results/campaign.jsonl
+experiments/figures/
+submission_cor/

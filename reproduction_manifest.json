@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "phase": "archived production campaign with separate validation and rerun outputs",
+  "python": "3.11",
+  "archive": "experiments/results/campaign.jsonl.gz",
+  "expected_rows": 12195,
+  "instance_manifest": "data/rsppbench/MANIFEST.json",
+  "campaign": {
+    "seeds": 30,
+    "processes": 7,
+    "studies": ["main", "metric", "init", "schedule", "calib", "qmin", "resample", "budget", "scale"]
+  },
+  "timing": {"seeds": 5, "processes": 1, "studies": ["timing"]},
+  "benchmark": {"seeds": [1], "include_scale": true},
+  "smoke": {"instance": "C50-4v-INS5-s1", "arm": "corridor", "seed": 0, "max_gen": 5},
+  "replay": {"study": "main", "instance": "C50-4v-INS5-s1", "arm": "corridor", "seed": 0},
+  "validation": {"seed": 20260928, "absolute_tolerance": 1e-9},
+  "excluded_comparison_fields": ["wall", "elapsed", "timing", "machine environment", "NREFS"]
+}

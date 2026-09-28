@@ -1,0 +1,15 @@
+\begin{tabular}{lrrrrrrl}
+\toprule
+\textbf{Arm} & $\Delta S$ (\%) & $\Delta f_1$ (\%) & feasible (\%) & W/T/L & $\hat{A}_{12}$ & $p_{\text{Holm}}$ & effect \\
+\midrule
+Greedy repair & +36.9 & -2.0 & 59.3$^{\dagger}$ & 10/5/1 & 0.92 & $<10^{-4}$ & large \\
+Cost-only & +0.0 & +0.0 & 100.0 & 27/0/0 & 1.00 & $<10^{-4}$ & large \\
+Deviation objective & +29.0 & -0.7 & 100.0 & 27/0/0 & 0.97 & $<10^{-4}$ & large \\
+Adaptive weight & +26.9 & -0.2 & 100.0 & 27/0/0 & 0.99 & $<10^{-4}$ & large \\
+Static $\varepsilon$-constraint & +42.5 & -2.2 & 70.4$^{\dagger}$ & 5/12/2 & 0.56 & 0.024 & small \\
+\textbf{Corridor (proposed)} & \textbf{+47.0} & \textbf{-2.8} & \textbf{99.8} & --- & --- & --- & --- \\
+Corridor, no tightening & +35.6 & -1.2 & 100.0 & 18/8/1 & 0.97 & 0.006 & large \\
+Corridor + NSGA-II & +48.5 & -2.0 & 99.4 & 0/26/1 & 0.47 & 0.551 & negligible \\
+Corridor + MOEA/D & +38.1 & -1.4 & 100.0 & 13/14/0 & 0.68 & 0.065 & medium \\
+\bottomrule
+\end{tabular}

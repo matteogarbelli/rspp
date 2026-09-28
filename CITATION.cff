@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Please cite the associated RSPP article when using this research package."
+title: "RSPP synthetic benchmark and reference implementation"
+type: software
+authors:
+  - family-names: Garbelli
+    given-names: Matteo
+abstract: "Synthetic inputs, archived results and reference implementation for geometric route similarity preservation."

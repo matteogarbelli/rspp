@@ -1,0 +1,209 @@
+{
+  "main": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "main"
+    ]
+  },
+  "_last": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "qmin"
+    ]
+  },
+  "metric": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "init": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "schedule": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "calib": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "resample": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "budget": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "scale": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "metric",
+      "init",
+      "schedule",
+      "calib",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "timing": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 1,
+    "studies": [
+      "timing"
+    ]
+  },
+  "qmin": {
+    "cpu": "Apple M2",
+    "cores": 8,
+    "memory_gb": 8,
+    "system": "Darwin",
+    "release": "25.5.0",
+    "mac_ver": "26.5.1",
+    "python": "3.11.6",
+    "numpy": "2.4.3",
+    "scipy": "1.16.1",
+    "procs": 7,
+    "studies": [
+      "qmin"
+    ]
+  }
+}
