@@ -1,0 +1,63 @@
+{
+  "existing_lightweight_selftests": {
+    "passed": true,
+    "kernel_error": 1.1368683772161603e-13,
+    "max_spacing": 298.5845958836171
+  },
+  "four_kernel_reference_comparisons": {
+    "passed": true,
+    "frechet": 5.684341886080802e-14,
+    "dtw": 2.842170943040401e-14,
+    "hausdorff": 5.684341886080802e-14,
+    "lcss": 0.0
+  },
+  "dominance_exchange_quantile_outside": {
+    "passed": true,
+    "rank_errors": 0,
+    "exchange_errors": 0,
+    "quantile_errors": 0,
+    "outside_errors": 0
+  },
+  "known_continuous_resampling_and_penalty_bound": {
+    "passed": true,
+    "bound_errors": 0,
+    "penalty_comparison_errors": 0,
+    "max_fraction_of_h": 0.3975235744980992
+  },
+  "reference_intervals_without_monotonicity_assumption": {
+    "passed": true,
+    "interval_failures": 0,
+    "min_coarse_minus_fine": -0.002755002978389598,
+    "reference_step": 0.5
+  },
+  "fixed_population_scale_equivariance": {
+    "passed": true,
+    "distance_error": 9.094947017729282e-13,
+    "weight_error": 8.881784197001252e-16
+  },
+  "relabel_against_exhaustive_oracle": {
+    "passed": true,
+    "optimality_error": 0.0,
+    "preserved_objective_violation_error": 2.2737367544323206e-13,
+    "increases": 0
+  },
+  "feasibility_statistics_and_choice_regressions": {
+    "passed": true,
+    "valid_indicators_unchanged": true,
+    "infeasible_hv": 0.0,
+    "infeasible_vector_count": 0,
+    "infeasible_igd_infinite": true,
+    "close_but_distinct_a12": 1.0,
+    "close_but_distinct_p": 4.3204630578274876e-08,
+    "minimax_can_choose_dominated_point": true
+  },
+  "production_source_provenance": {
+    "passed": true,
+    "unexplained_changes": [],
+    "declared_post_campaign_changes": [
+      "experiments/campaign/run.py",
+      "experiments/rspp/selftest.py"
+    ],
+    "checked_files": 13
+  }
+}

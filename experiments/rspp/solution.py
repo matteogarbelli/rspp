@@ -13,9 +13,10 @@ Objectives (all minimised, all in natural units):
     f3  cumulative trajectory deviation S(X)       metres
 
 Constraints, aggregated into a single normalised violation for the Constraint
-Dominance Principle:
+Dominance Principle (Eqs. 10-11):
     capacity      sum_k max(0, load_k - Q) / Q
     duration      sum_k max(0, T_k - T_max) / T_max
+    availability  number of requests assigned to withdrawn vehicles
     corridor      max(0, S(X) - tau(t)) / max(tau(t), 1)
 """
 from __future__ import annotations

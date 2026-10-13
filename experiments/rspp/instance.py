@@ -2,8 +2,8 @@
 
 An RSPP instance is a *pair*: a baseline problem P together with the plan
 X_baseline that was in force when the shift started, and a disrupted problem P'
-that must be replanned.  This pairing is precisely what public VRP benchmarks
-do not provide, and it is what RSPP-Bench supplies.
+that must be replanned (Definition 1).  Standard VRP instances do not include a
+plan in force.
 
 Coordinates are planar and in metres throughout; there is no geodetic step and
 therefore no projection error.
@@ -72,7 +72,7 @@ class Instance:
 
 @dataclass
 class RSPPPair:
-    """Baseline plan + disrupted instance: one RSPP-Bench problem."""
+    """Baseline plan + disrupted instance: one RSPP instance (Definition 1)."""
 
     name: str
     base: Instance              # instance as planned at shift start

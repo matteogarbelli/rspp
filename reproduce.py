@@ -105,10 +105,12 @@ def figures():
     differences = {k: [v, actual.get(k)] for k,v in expected.items()
                    if k != 'NREFS' and v != actual.get(k)}
     assert not differences, differences
-    for name in ['tab_bench.tex', 'tab_indicators.tex', 'tab_family.tex', 'tab_main.tex']:
+    for name in ['tab_bench.tex', 'tab_indicators.tex', 'tab_family.tex', 'tab_main.tex', 'tab_uncertainty.tex']:
         assert (stage/'submission_cor'/name).read_bytes() == (ROOT/'reference'/name).read_bytes(), name
+    assert (stage/'experiments/figures/driver_comparison.csv').read_bytes() == (ROOT/'reference/driver_comparison.csv').read_bytes()
     return {'status': 'pass', 'matching_experimental_macros': len(expected)-('NREFS' in expected),
-            'matching_tables': 4, 'bibliography_count_excluded': True}
+            'matching_tables': 5, 'matching_driver_comparison': True, 'bibliography_count_excluded': True,
+            'frechet_coupling': json.loads((stage/'experiments/figures/frechet_coupling_summary.json').read_text())}
 
 
 def campaign(kind):
@@ -117,7 +119,7 @@ def campaign(kind):
     # A fresh campaign is separate from the bundled archive, including its environment.
     run_module('experiments.campaign.run', ['--bench', ROOT/'data/rsppbench',
         '--out', destination, '--seeds', spec['seeds'], '--procs', spec['processes'],
-        '--studies', *spec['studies']])
+        '--arm', spec['arm'], '--studies', *spec['studies']])
     return {'status': 'complete', 'output': str(destination.relative_to(ROOT))}
 
 

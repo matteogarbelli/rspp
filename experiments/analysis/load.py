@@ -23,9 +23,12 @@ def _open(path):
 
 
 # Arms whose per-generation history any figure actually reads.  The mechanism
-# measurement needs the corridor and the weighted arm; the convergence plot adds
-# the two objective-only arms.  Nothing reads the history of the rest.
-_HISTORY_ARMS = {"sim_lambda", "corridor", "cost_only", "sim_obj"}
+# measurement and the weight trajectory need the proposed arm, the weighted
+# separate objective and the corridor; the convergence plot adds the two
+# objective-only arms.  Nothing reads the history of the rest.
+_HISTORY_ARMS = {"sum_lambda", "sim_lambda", "corridor", "cost_only", "sim_obj"}
+# Driver diagnostics require every selected route in these four main arms.
+_DRIVER_ARMS = {"cost_only", "sum_lambda", "sum_lambda_x4", "sum_lambda_x16"}
 
 
 def _summarise_history(r):
@@ -63,15 +66,15 @@ def _prune(r):
     _summarise_history(r)
     if r.get("study") != "main":
         # Sensitivity, budget, scale and timing studies are read only through
-        # the tidy frame: knee objectives, runtime, feasibility, tau0 and the
-        # corridor-trajectory summary attached just above.
+        # the tidy frame: compromise-plan objectives, runtime, feasibility,
+        # tau0 and the corridor-trajectory summary attached just above.
         for k in ("history", "front", "routes"):
             r.pop(k, None)
         return
     if r.get("arm") not in _HISTORY_ARMS:
         r.pop("history", None)
-    if r.get("seed") != 0:
-        r.pop("routes", None)          # only the map figure reads geometry
+    if r.get("seed") != 0 and r.get("arm") not in _DRIVER_ARMS:
+        r.pop("routes", None)
 
 
 def load(path="experiments/results/campaign.jsonl", prune=True):
@@ -103,18 +106,23 @@ def to_frame(rows):
             vals = [h[key] for h in hist if h.get(key) is not None]
             return float(np.mean(vals)) if vals else np.nan
         front = r.get("front") or []
-        # The cheapest plan this run could have returned.  The knee is a
-        # compromise across three objectives, so comparing knee distances
+        # The cheapest plan this run could have returned.  The compromise plan
+        # balances three objectives, so comparing compromise distances
         # conflates the mechanism with the decision rule; the front minimum is
-        # what the arm actually achieved on distance.
+        # what the arm achieved on distance.
         f1_front_min = float(min(p[0] for p in front)) if front else np.nan
         alt = r.get("knee_alt")
+        # Deviation of the plan the search selected before the relabelling
+        # output step (absent from databases written before that step existed).
+        raw = r.get("objectives_raw")
         recs.append(dict(
             study=r["study"], instance=r["instance"], arm=r["arm"], seed=r["seed"],
             n_customers=r.get("n_customers"), n_vehicles=r.get("n_vehicles"),
             family=r.get("family"),
             f1=f1, f2=f2, f3=f3, violation=r["violation"], feasible=r["feasible"],
             f1_front_min=f1_front_min,
+            f3_raw=raw[2] if raw else np.nan,
+            n_relabelled=r.get("n_relabelled", np.nan),
             alt_f1=alt[0] if alt else np.nan, alt_f3=alt[2] if alt else np.nan,
             runtime=r.get("runtime", np.nan),
             cpu_time=r.get("cpu_time", np.nan),

@@ -1,97 +1,141 @@
-# RSPP reproducibility package
+# RSPP research code and data
 
-Research materials for *The Route Similarity Preservation Problem: an adaptive
-geometric corridor for vehicle routing replanning*, Matteo Garbelli.
+Research package for *The Route Similarity Preservation Problem: geometric
+deviation as an objective in evolutionary vehicle routing replanning*
+(Matteo Garbelli, manuscript prepared for Computers & Operations Research).
 
-This folder is prepared for a separate public repository. It contains the
-standalone synthetic research implementation, generator, 30 instance files,
-instance manifest, 12,195 archived result records and analysis scripts. It
-contains no files copied from the HPA repositories, industrial datasets,
-deployment configuration, authentication utilities or private repository history.
-The research implementation runs independently of those systems. An older isolated
-selection diagnostic depended on HPA and is excluded, together with its results.
-The shortened manuscript uses the reproducible in-campaign weight measurements.
+The proposed method uses NSGA-III with objectives `(f1 + c lambda(t) S, f2)`:
+travel distance plus cumulative discrete Fréchet deviation, and active-route
+workload spread. The population calibrates the exchange rate at each generation.
+The method imposes capacity, duration and vehicle-availability requirements.
+Its geometric term is a soft penalty. The comparison includes separate
+deviation objectives and static, constant-schedule and tightening bounds.
 
-## Quick start
+The reported archive contains 12,735 records: 9,720 main-study records
+(27 instances, 12 methods, 30 seeds), 2,970 sensitivity and scalability records,
+and 45 single-worker timing records. The synthetic instances comprise 27 main
+baseline-disruption pairs and three scalability pairs. This repository contains
+standalone research code and synthetic data.
 
-Use Python 3.11, a C compiler and Make (or invoke `python reproduce.py` directly).
-The original campaign used Python 3.11.6. Dependency installation requires
-internet access; the research commands run locally after installation.
+## Requirements and verification
+
+Python 3.11, a C compiler (`cc`) and Make. Dependency versions are pinned in
+`requirements.txt`.
 
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 make verify
-make smoke
 make replay
 make figures
 ```
 
-`verify` checks file integrity, all four numerical kernels, mathematical
-invariants, campaign completeness and all 243 stored main-study plans. It also
-reproduces the headline statistics and the documented normalisation-state
-counterexample. `smoke` runs five generations on one instance; it is an execution
-check, not a reproduction of a production result. `figures` regenerates the
-figures, tables and numerical macros from the archived campaign and compares
-them with the bundled reference values. The bibliography count and excluded historical diagnostic are outside this comparison.
-`replay` reruns one archived main-study cell at the original 300-generation
-budget and checks its objectives, front, selected routes and feasibility.
+| Command | Purpose |
+|---|---|
+| `make verify` | Check file hashes, all 30 instance hashes and baseline feasibility, exact campaign cells, all 9,720 stored main-study plans, four C kernels against NumPy references, exchange-rate and dominance statements, quantile counts, scale equivariance, exhaustive assignment/reversal oracles, sampling intervals and analysis regressions |
+| `make replay` | Re-run `C50-4v-INS5-s1`, summed deviation at c=1, seed 0, for 300 generations; compare objectives, selected routes, front, feasibility and evaluation count with the archive |
+| `make figures` | Regenerate the figures, numerical macros and five tables; compare all experimental macros except the bibliography count and all five tables with `reference/` |
+| `make smoke` | Five generations on one instance; an execution check |
+| `make selftest` | Kernel and geometric reference checks, preserving the campaign-time self-test |
+| `make bench` | Regenerate all 30 instances and compare their file hashes |
 
-Every wrapper command reads `reproduction_manifest.json`, writes to `outputs/`
-and appends its outcome to `outputs/runs.jsonl`. The archived inputs remain
-unchanged. A checksum inventory is in `FILES.sha256.json`; source-copy hashes
-are recorded in `provenance.json`.
+See `VALIDATION.md` for recorded checks. Commands write generated outputs and
+append their outcomes under `outputs/`. Kernels are compiled locally when
+needed. Archived inputs are preserved. Installing dependencies requires
+internet access; these checks then run offline.
 
-## Recompute the experiments
+## Re-running the experiments
 
 ```sh
-make bench       # regenerate all 30 instances and compare their SHA-256 hashes
-make campaign    # full production settings, 30 seeds, 7 workers
-make timing      # separate single-worker timing study; use an idle machine
-make selftest    # additional geometric checks, written outside the archive
+make campaign
+make timing
 ```
 
-The complete campaign is substantially more expensive than archive reanalysis.
-Its results and machine snapshot go to `outputs/rerun/`. Repeating a campaign
-command resumes completed cells. Run `campaign` and `timing` sequentially.
-Wall-clock measurements depend on hardware and load. Matching seeds and versions
-improve numerical reproducibility; bitwise agreement across platforms is not
-guaranteed. `make bench` checks deterministic instance bytes on the local setup.
+The manifest specifies 30 seeds and seven processes for the campaign, followed
+by five seeds and one process for timing. Run timing on an idle machine. New
+results and machine snapshots go to `outputs/rerun/`; completed cells are
+retained when an interrupted run resumes. The full campaign requires substantial
+computation. Fixed seeds and versions support repeatability on one platform;
+wall-clock times and bitwise agreement depend on hardware and software.
 
-## Contents
+## Methods and sources
+
+| Code arm | Method |
+|---|---|
+| `greedy` | Deterministic greedy repair |
+| `cost_only` | Distance and workload |
+| `sim_obj`, `sim_lambda` | Separate deviation objective, plain or weighted |
+| `sum_lambda`, `sum_lambda_x4`, `sum_lambda_x16` | Summed deviation at fixed dimensionless preference factors c=1,4,16 |
+| `eps_static` | Static deviation bound calibrated from greedy repair |
+| `corridor_fixed`, `corridor` | Constant-schedule or tightening population-calibrated bound |
+| `sum_lambda_nsga2`, `sum_lambda_moead` | Summed deviation at c=1 with NSGA-II or MOEA/D |
 
 | Path | Contents |
 |---|---|
-| `experiments/rspp/` | Reference solver, geometry, routing operators and C kernels |
-| `experiments/rsppbench/` | Seeded synthetic instance generator |
-| `experiments/campaign/` | Main study and sensitivity campaign definitions |
-| `experiments/analysis/` | Statistics, figures, tables and LaTeX macros |
-| `data/rsppbench/` | 27 main cases, 3 scale cases and their manifest |
-| `experiments/results/` | Compressed results and archived environment/self-test metadata |
-| `reference/` | Expected numerical macros and tables |
-| `checks/` | Independent validation and its manifest |
+| `experiments/rspp/` | Routing algorithm, representation, operators and trajectory kernels |
+| `experiments/campaign/` | Study definitions and optional OR-Tools distance reference |
+| `experiments/rsppbench/`, `data/rsppbench/` | Seeded instance generator and synthetic instances |
+| `experiments/analysis/` | Figures, tables, statistics and numerical macros |
+| `experiments/results/` | Reported archive, environment, distance-reference results, archive manifest and campaign-time self-test |
+| `reference/` | Expected macros and tables; independent mathematical and production audit reports |
+| `checks/` | Reproducible validation scripts and their manifest |
+| `FILES.sha256.json`, `provenance.json` | Release inventory and source provenance |
 
-The 27 main cases share nine baseline problems across three disruption families.
-Main study arms comprise greedy repair, cost-only search, a deviation objective,
-adaptive weighting, a repair-derived static bound, and four corridor variants.
-The complete archive includes the floor-quantile and timing studies.
+The ten manuscript figures generated by the analysis are `fig_mechanism`,
+`fig_tradeoff`, `fig_findings_summary`, `fig_cd`, `fig_dynamics`, `fig_maps`,
+`fig_metrics`, `fig_ablation`, `fig_scalability` and `fig_driver_burden`.
+`fig_violin` and `fig_frechet_coupling` remain optional diagnostics generated by
+analysis; they are not included in the current manuscript. Point estimates
+are in `reference/results_macros.tex`; bootstrap confidence intervals are in
+`reference/tab_uncertainty.tex`. The main table is typeset from those macros.
+`DATA_DICTIONARY.md` defines units and record fields.
 
 ## Interpretation
 
-The research solver reproduces the implementation used for the reported
-experiments. In particular, it retains the adaptive-weight normalisation state
-and repair behaviour discussed in the manuscript. These are documented
-limitations, not changes made after the campaign. The legacy self-test uses fine
-discrete references; its field `true_m` denotes an approximation to continuous
-Fréchet distance. Use `make selftest` for correctly qualified output.
+The summed method compares `(f1 + rho_t*S, f2)`, with `rho_t = c*lambda(t)`.
+Paired-seed bootstrap intervals in the appendix describe run variability on
+the fixed 27-instance suite; they do not represent uncertainty over new
+baselines or operating regions. The preference factor `c` is dimensionless, chosen before a run and fixed;
+`lambda(t)` is computed from that run's parent population. The product is the
+exchange rate in metres of travel per metre of cumulative deviation. At the
+same population, c=4 quadruples the geometric charge relative to c=1. Across
+runs, populations and their adaptive rates can differ. The factor applies the
+same rate to every matched driver's deviation and imposes no deviation limit.
 
-Releasing these materials makes the experiments inspectable and rerunnable. It
-does not resolve the shared-baseline dependence, comparator limitations or
-absence of road-network and mid-shift validation discussed in the paper.
+`fig_driver_burden` compares cumulative deviation with the maximum driver
+deviation and the largest driver's share of the total. The associated
+`driver_terms.csv`, `driver_comparison.csv` and `driver_burden_summary.json`
+retain the recomputed diagnostics. Aggregate reductions of 7.2%,14.5%,22.3%
+at c=1,4,16 accompany median maximum-driver reductions of 0%,0%,0.38%.
+Cumulative improvement does not guarantee protection for every driver.
 
-## Release status
 
-Prepared locally; no public URL or DOI has yet been assigned. Licensing is pending
-the author's choice. Industrial HPA code remains outside this package. See
-`RELEASE_STATUS.md` for checks and the remaining publication steps.
+Every method applies route reversal and driver reassignment to minimize
+deviation after search, under homogeneous-fleet and symmetric-distance
+assumptions. This preserves a fixed plan's distance, workload and hard
+violation, but can change which compromise plan is selected. The default
+compromise uses all three reported objectives, with a separate per-method
+selection sensitivity. The archive retains selected routes for every main run.
+
+The separate weighted objective retains an ideal point in its previous units;
+the summed method resets its ideal point each generation. Greedy repair retains
+existing routes under demand surges. These behaviors are described in the
+article and retained in the production implementation.
+
+The instance pairs share nine baseline problems, and disruptions occur before
+route execution. Numerical consistency does not establish global optimality,
+driver acceptance or performance on road-network and mid-shift problems.
+The `true_m` field in the historical self-test denotes a fine discrete reference,
+with a stated approximation error.
+
+## Licence and citation
+
+Source code (`*.py`, `*.c`, `Makefile`) uses the MIT License (`LICENSE`). Other
+files use Creative Commons Attribution 4.0 (`LICENSE-DATA`). Cite the article
+and this repository; metadata are provided in `CITATION.cff`.
+
+The citation metadata identifies both licences. This prepared revision has no
+release date or archival DOI until publication. Production metadata replaces
+local executable paths with repository-relative paths; source hashes and
+scientific records are preserved. `provenance.json` records these transformations.

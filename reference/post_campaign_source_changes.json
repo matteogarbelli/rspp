@@ -1,0 +1,23 @@
+{
+  "phase": "post-production diagnostic and restart fixes",
+  "optimization_code_changed": false,
+  "production_audit_source_sha256": "91b1f416565d27364a506de7d5ef7750e2891e55e494f96d7566bdb85e8b9e2c",
+  "files": [
+    {
+      "file": "experiments/campaign/run.py",
+      "before_sha256": "ade2c2e5a29f7be0fb82851b86171dc1bf23d8528a03292ad9fb83081db55f2c",
+      "after_sha256": "ac0d2cf16c7bb90b91f25f8a21964b8c7e862d0eb0cac00a9c03ed231ccfd424"
+    },
+    {
+      "file": "experiments/rspp/selftest.py",
+      "before_sha256": "9f8737ea08215d9a2e42af641c11c5c4bb52efe88a725e6df1a19da867fd7cc3",
+      "after_sha256": "e5557af8d1d6b15f371301939e14725abcefc76b755c56558161176326064855"
+    },
+    {
+      "file": "Makefile",
+      "before_sha256": "d18fcde98e1b9a54ba16cc0400d2ad9903b4461867150b5115b03c00d42c823d",
+      "after_sha256": "2904b77364e5a97b5ac791a27f1880aa8c7e2c5a90852544596052a24b782832"
+    }
+  ],
+  "notes": "Makefile defaults to the reported archive and packages an explicit whitelist of current submission sources and figures."
+}

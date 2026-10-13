@@ -30,7 +30,7 @@ def check_metric_axioms(n_trials=20):
         A = rng.normal(0, 300, (rng.integers(5, 40), 2))
         B = rng.normal(0, 300, (rng.integers(5, 40), 2))
         C = rng.normal(0, 300, (rng.integers(5, 40), 2))
-        assert kernels.frechet(A, A) == 0.0, "identity of indiscernibles"
+        assert kernels.frechet(A, A) == 0.0, "zero self-distance"
         assert abs(kernels.frechet(A, B) - kernels.frechet(B, A)) < 1e-12, "symmetry"
         assert (kernels.frechet(A, C)
                 <= kernels.frechet(A, B) + kernels.frechet(B, C) + 1e-9), "triangle"
@@ -50,11 +50,11 @@ def check_vertex_preservation():
 
 
 def check_resampling_bound(n_trials=12):
-    """Proposition 5: delta_F <= delta_dF(P_h, Q_h) <= delta_F + h.
+    """Check consistency with the Fréchet bound using a 1 m reference.
 
-    The continuous distance is approached from above as h -> 0, so the h = 1
-    value stands in for delta_F; vertex-preserving subdivision is what makes
-    the lower bound hold.
+    The fine discrete value has error at most 1 m. Refinement need not
+    monotonically decrease the discrete distance, so both reference and
+    coarse values represent intervals for the continuous distance.
     """
     rng = np.random.default_rng(11)
     worst_ratio = 0.0
@@ -65,7 +65,7 @@ def check_resampling_bound(n_trials=12):
         fine = kernels.frechet(resample(P, 1.0), resample(Q, 1.0))
         for h in (200.0, 500.0, 1000.0, 2000.0):
             d = kernels.frechet(resample(P, h), resample(Q, h))
-            assert d >= fine - 1e-6, "discrete below continuous limit"
+            assert d >= fine - 1.0 - 1e-6, "inconsistent continuous-distance intervals"
             assert d <= fine + h + 1e-6, f"bound violated: {d-fine} > {h}"
             worst_ratio = max(worst_ratio, (d - fine) / h)
     return worst_ratio
@@ -84,7 +84,7 @@ def check_naive_underreport(h=2000.0):
     than transcribed.
     """
     rng = np.random.default_rng(20260820)
-    # A 10 m reference step stands in for the continuous distance: the discrete
+    # The 10 m discrete reference has approximation error at most 10 m. The
     # Frechet computation is quadratic in the sample count, so a metre-scale
     # reference on a 20 km curve costs 10^8 cell evaluations per pair.
     ref_step = 10.0
@@ -98,7 +98,7 @@ def check_naive_underreport(h=2000.0):
         keep = kernels.frechet(resample(P, h), resample(Q, h))
         # Vertex preservation is what the proposition assumes; without it the
         # lower bound is not merely loose, it is false.
-        assert keep >= true - 1e-6, "vertex-preserving resampling broke the bound"
+        assert keep >= true - ref_step - 1e-6, "inconsistent reference interval"
         n_pts = max(2, int(round(length / h)) + 1)
         naive = kernels.frechet(resample_fixed(P, n_pts), resample_fixed(Q, n_pts))
         if naive < true - 1e-6:
@@ -107,30 +107,36 @@ def check_naive_underreport(h=2000.0):
             if worst is None or gap > worst["gap_m"]:
                 worst = dict(length_km=length / 1000.0, true_m=true,
                              naive_m=naive, preserving_m=keep, gap_m=gap)
-    assert under > 0, "expected naive resampling to under-report somewhere"
+    assert under > 0, "expected uniform samples below the fine reference"
+    assert worst["gap_m"] > ref_step, "example does not certify a continuous-distance underestimate"
     return dict(h_m=h, n_trials=n_trials, n_under=under,
                 pct_under=100.0 * under / n_trials, **worst)
 
 
 if __name__ == "__main__":
+    import argparse
     import json
-    import os
+    from pathlib import Path
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default="outputs/selftest.json")
+    destination = Path(parser.parse_args().out)
 
     w = check_kernels()
     print(f"PASS  C kernels match NumPy reference (max abs deviation {w:.2e})")
     check_metric_axioms()
-    print("PASS  discrete Frechet satisfies identity, symmetry, triangle inequality")
+    print("PASS  random checks of Fréchet self-distance, symmetry and triangle inequality")
     mx = check_vertex_preservation()
     print(f"PASS  subdivision retains all vertices, max spacing {mx:.1f} m <= h")
     r = check_resampling_bound()
-    print(f"PASS  resampling bound delta_F <= delta_dF <= delta_F + h "
+    print(f"PASS  sampling intervals agree with a 1 m reference "
           f"(worst case used {r*100:.1f}% of the allowance)")
     u = check_naive_underreport()
-    print(f"PASS  naive resampling under-reports in {u['n_under']}/{u['n_trials']} "
+    print(f"PASS  uniform resampling is below the fine reference in {u['n_under']}/{u['n_trials']} "
           f"pairs at h = {u['h_m']:.0f} m; worst case {u['naive_m']:.0f} m "
-          f"against a true {u['true_m']:.0f} m on a {u['length_km']:.0f} km pair "
+          f"against a 10 m-step reference of {u['true_m']:.0f} m on a {u['length_km']:.0f} km pair "
           f"(vertex-preserving: {u['preserving_m']:.0f} m)")
-    os.makedirs("experiments/results", exist_ok=True)
-    with open("experiments/results/selftest.json", "w") as fh:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with destination.open("w") as fh:
         json.dump(dict(kernel_max_abs=w, max_spacing=mx, bound_worst_ratio=r,
                        **u), fh, indent=2)

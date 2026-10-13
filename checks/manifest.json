@@ -1,12 +1,5 @@
 {
-  "phase": "public-package validation of archived synthetic campaign",
-  "seed": 20260928,
-  "kernel_trials": 100,
-  "invariance_trials": 100,
-  "geometric_trials": 20,
-  "absolute_tolerance": 1e-09,
-  "database": "experiments/results/campaign.jsonl.gz",
-  "instance_manifest": "data/rsppbench/MANIFEST.json",
-  "run_existing_selftests": false,
-  "solver_changes": false
+  "status": "superseded",
+  "current_validation_manifest": "checks/validation_manifest.json",
+  "current_reproduction_manifest": "reproduction_manifest.json"
 }

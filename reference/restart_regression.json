@@ -1,0 +1,20 @@
+{
+  "phase": "completed compressed-archive restart regression",
+  "passed": true,
+  "parameters": {
+    "seeds": 30,
+    "processes": 7,
+    "studies": [
+      "main",
+      "metric",
+      "init",
+      "resample",
+      "budget",
+      "scale"
+    ]
+  },
+  "plain_database_created": false,
+  "archive_and_environment_preserved": true,
+  "runtime_s": 5.3546142499981215,
+  "stdout": "0 jobs to run (12735 already present), 7 processes\ncampaign already complete\n"
+}

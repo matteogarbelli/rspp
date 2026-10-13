@@ -1,12 +1,10 @@
 """Constructive and improvement heuristics.
 
 Two uses:
-  * building X_baseline for an RSPP-Bench pair (sweep + local search), which
-    must be deterministic given the instance seed so the benchmark is
-    reproducible;
-  * the ``greedy`` comparison arm -- cheapest-feasible-insertion repair of the
-    existing plan, which is what dispatchers actually do by hand and what most
-    commercial systems do on a disruption.
+  * building X_baseline for an instance pair (sweep + local search), which is
+    deterministic given the instance seed (Section 7.1);
+  * the ``greedy`` comparison arm and the grafted initialisation --
+    cheapest-feasible-insertion repair of the plan in force (Section 6.2).
 """
 from __future__ import annotations
 
@@ -218,9 +216,10 @@ def greedy_reinsertion(pair):
     """Repair the baseline plan by cheapest feasible insertion of new work.
 
     Customers no longer present are dropped; customers on withdrawn vehicles
-    and genuinely new customers are inserted at their cheapest feasible
-    position.  No global re-optimisation is performed -- this arm represents
-    manual dispatcher repair.
+    and new customers are inserted at their cheapest feasible position, or
+    appended to the least-loaded available vehicle when no feasible position
+    exists.  Existing routes are not re-optimised, so demand revisions leave
+    them unchanged (Sections 9.2 and 10.1).
     """
     inst = pair.disrupted
     D = inst.dist

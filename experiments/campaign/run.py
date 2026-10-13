@@ -1,8 +1,8 @@
-"""Staged experimental campaign over RSPP-Bench.
+"""Staged experimental campaign over the instance suite.
 
-Every result row carries the seed, the arm, the instance, the full config and
-the stopping criterion, so that any figure in the paper regenerates from the
-stored rows alone.  Results are appended as JSON Lines; a run that is already
+Every result row carries the study, seed, arm, instance, the recorded run
+settings and the stopping criterion, so that any figure in the paper
+regenerates from the stored rows alone.  Results are appended as JSON Lines; a run that is already
 present (same instance/arm/seed/study) is skipped, so the campaign is
 restartable.
 """
@@ -18,8 +18,12 @@ from multiprocessing import Pool
 from ..rspp import algorithm
 from ..rspp.instance import RSPPPair
 
-MAIN_ARMS = ["greedy", "cost_only", "sim_obj", "sim_lambda", "eps_static",
-             "corridor", "corridor_fixed", "corridor_nsga2", "corridor_moead"]
+# The reported comparison.  The tightening bound's NSGA-II and MOEA/D variants
+# (corridor_nsga2, corridor_moead) belong to an earlier design; the database of
+# the first 2026-10 launch holds them, and they are not reported.
+MAIN_ARMS = ["greedy", "cost_only", "sim_obj", "sim_lambda", "sum_lambda",
+             "sum_lambda_x4", "sum_lambda_x16", "eps_static", "corridor",
+             "corridor_fixed", "sum_lambda_nsga2", "sum_lambda_moead"]
 METRICS = ["frechet", "dtw", "hausdorff", "lcss"]
 
 
@@ -48,13 +52,10 @@ def _one(job):
     return _trim(res, keep_routes)
 
 
-# Sensitivity and metric studies run on a representative subset; the main
-# comparison uses all 27 instances.  The subset is a Latin square over the
-# design: one instance for every (family, size) pair, with each layout appearing
-# exactly once per family and once per size.  Nine cells therefore cover every
-# level of every factor, which the previous four-instance subset did not -- it
-# contained no demand-surge instance at all, so no ablation ever saw the family
-# with the largest effect.
+# Sensitivity and metric studies run on a subset; the main comparison uses all
+# 27 instances.  The subset is a Latin square over the design: one instance for
+# every (family, size) pair, with each layout appearing exactly once per family
+# and once per size, so the nine cells cover every level of every factor.
 SUBSET = [
     # INS            WDR                SRG
     "C50-4v-INS5-s1",   "R50-4v-WDR0-s1",   "RC50-4v-SRG6-s1",
@@ -63,17 +64,26 @@ SUBSET = [
 ]
 
 
-SCALE_ARMS = ["cost_only", "corridor", "corridor_moead"]
+SCALE_ARMS = ["cost_only", "sum_lambda", "corridor"]
+
+# Studies of the tightening bound's own parameters.  They always run on that
+# arm, whichever arm the other sensitivity studies use.
+CORRIDOR_STUDIES = ("schedule", "calib", "qmin")
 
 
-def build_jobs(bench_dir, instances, seeds, studies, scale_instances=()):
+def build_jobs(bench_dir, instances, seeds, studies, scale_instances=(),
+               study_arm="sum_lambda"):
+    """Jobs for the requested studies.  The generation-budget, timing, metric,
+    initialisation and resampling studies run on ``study_arm``."""
     jobs = []
     subset = [i for i in instances if i in SUBSET] or instances[:2]
     for inst in instances:
         for s in seeds:
             if "main" in studies:
+                # Routes are kept for every main-study run, so that any plan
+                # behind a reported number can be inspected after the fact.
                 for arm in MAIN_ARMS:
-                    jobs.append((bench_dir, inst, arm, s, "main", {}, s == seeds[0]))
+                    jobs.append((bench_dir, inst, arm, s, "main", {}, True))
     for inst in subset:
         for s in seeds:
             if "budget" in studies:
@@ -81,12 +91,12 @@ def build_jobs(bench_dir, instances, seeds, studies, scale_instances=()):
                 # whether 300 generations is enough at the largest size; halving
                 # and doubling it can.
                 for g in (150, 600):
-                    jobs.append((bench_dir, inst, "corridor", s, f"budget:{g}",
+                    jobs.append((bench_dir, inst, study_arm, s, f"budget:{g}",
                                  {"max_gen": g}, False))
             if "timing" in studies:
                 # Uncontended timing: run this study with --procs 1 so the
                 # reported cost is not wall time under seven-way contention.
-                jobs.append((bench_dir, inst, "corridor", s, "timing", {}, False))
+                jobs.append((bench_dir, inst, study_arm, s, "timing", {}, False))
     for inst in scale_instances:
         if "scale" in studies:
             for s in seeds:
@@ -96,10 +106,10 @@ def build_jobs(bench_dir, instances, seeds, studies, scale_instances=()):
         for s in seeds:
             if "metric" in studies:
                 for m in METRICS:
-                    jobs.append((bench_dir, inst, "corridor", s, f"metricv2:{m}",
+                    jobs.append((bench_dir, inst, study_arm, s, f"metricv2:{m}",
                                  {"metric": m}, False))
             if "init" in studies:
-                jobs.append((bench_dir, inst, "corridor", s, "init:random",
+                jobs.append((bench_dir, inst, study_arm, s, "init:random",
                              {"init": "random"}, False))
             if "schedule" in studies:
                 jobs.append((bench_dir, inst, "corridor", s, "schedule:gaussian",
@@ -118,7 +128,7 @@ def build_jobs(bench_dir, instances, seeds, studies, scale_instances=()):
                                  f"qmin:q{int(q*100)}", {"tau_qmin": q}, False))
             if "resample" in studies:
                 for step in (100.0, 500.0, 1000.0):
-                    jobs.append((bench_dir, inst, "corridor", s,
+                    jobs.append((bench_dir, inst, study_arm, s,
                                  f"resample:{int(step)}",
                                  {"resample_step": step}, False))
     return jobs
@@ -158,8 +168,46 @@ def _write_environment(path, procs, studies):
     # uncontended timing study, notably) records its own procs count.
     prev.update({s: env for s in studies})
     prev["_last"] = env
+    prev.setdefault("_launches", []).append(_provenance(studies, procs))
     with open(path, "w") as fh:
         json.dump(prev, fh, indent=2)
+
+
+def _provenance(studies, procs):
+    """What ran: command line, git state and digests of the code and instances.
+
+    A launch from a working tree with uncommitted changes is still traceable:
+    the digests identify the exact files that produced the rows.
+    """
+    import datetime
+    import hashlib
+    import subprocess
+
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    files = sorted(
+        [os.path.join(root, "rspp", f) for f in os.listdir(os.path.join(root, "rspp"))
+         if f.endswith((".py", ".c"))]
+        + [os.path.abspath(__file__),
+           os.path.join(os.path.dirname(root), "data", "rsppbench", "MANIFEST.json")])
+    digests = {}
+    for f in files:
+        with open(f, "rb") as fh:
+            digests[os.path.relpath(f, os.path.dirname(root))] = hashlib.sha256(
+                fh.read()).hexdigest()
+
+    def _git(*args):
+        try:
+            return subprocess.run(["git", *args], capture_output=True, text=True,
+                                  timeout=10, cwd=os.path.dirname(root)).stdout.strip()
+        except Exception:
+            return None
+
+    return dict(
+        time_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+        argv=sys.argv, studies=list(studies), procs=procs,
+        git_head=_git("rev-parse", "HEAD"),
+        git_dirty=_git("status", "--porcelain", "--", "experiments", "data"),
+        code_sha256=digests)
 
 
 def main():
@@ -170,6 +218,9 @@ def main():
     ap.add_argument("--procs", type=int, default=7)
     ap.add_argument("--studies", nargs="+", default=["main"])
     ap.add_argument("--instances", nargs="*", default=None)
+    ap.add_argument("--arm", default="sum_lambda",
+                    help="arm of the budget, timing, metric, initialisation "
+                         "and resampling studies")
     a = ap.parse_args()
 
     with open(os.path.join(a.bench, "MANIFEST.json")) as fh:
@@ -197,10 +248,16 @@ def main():
                     continue
 
     jobs = [j for j in build_jobs(a.bench, instances, seeds, a.studies,
-                                  scale_instances)
+                                  scale_instances, study_arm=a.arm)
             if (j[4], j[1], j[2], j[3]) not in done]
     print(f"{len(jobs)} jobs to run ({len(done)} already present), "
           f"{a.procs} processes", flush=True)
+
+    # A complete compressed archive must not be hidden by an empty plain
+    # file, and a no-op resume must preserve the production environment.
+    if not jobs:
+        print("campaign already complete", flush=True)
+        return
 
     # Record the machine that ran the campaign, next to the campaign.  Deriving
     # it later from whichever machine happened to draw the figures is how a

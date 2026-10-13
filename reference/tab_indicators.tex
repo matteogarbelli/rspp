@@ -2,14 +2,17 @@
 \toprule
 \textbf{Arm} & HV $\uparrow$ & IGD$^{+}$ $\downarrow$ & $\varepsilon$ $\downarrow$ & spacing & distinct & returned \\
 \midrule
-Greedy repair & 0.608 & 0.253 & 0.486 & 0.000 & 1 & 1 \\
-Cost-only & 0.874 & 0.125 & 0.257 & 0.018 & 40 & 92 \\
-Deviation objective & 0.992 & 0.066 & 0.169 & 0.024 & 46 & 92 \\
-Adaptive weight & 1.004 & 0.063 & 0.158 & 0.024 & 44 & 92 \\
-Static $\varepsilon$-constraint & 0.625 & 0.202 & 0.406 & 0.000 & 2 & 92 \\
-\textbf{Corridor (proposed)} & 0.651 & 0.242 & 0.448 & 0.000 & 1 & 92 \\
-Corridor, no tightening & 1.003 & 0.063 & 0.162 & 0.021 & 45 & 92 \\
-Corridor + NSGA-II & 0.649 & 0.243 & 0.448 & 0.000 & 2 & 92 \\
-Corridor + MOEA/D & 0.588 & 0.286 & 0.483 & 0.000 & 1 & 74 \\
+Greedy repair & 0.144 & 0.331 & 0.587 & 0.000 & 1 & 1 \\
+Cost-only & 0.868 & 0.124 & 0.249 & 0.017 & 40 & 92 \\
+Separate objective & 0.973 & 0.077 & 0.173 & 0.025 & 40 & 89 \\
+Separate objective, weighted & 0.987 & 0.076 & 0.165 & 0.026 & 38 & 89 \\
+\textbf{Summed deviation, $c=1$} & 0.890 & 0.101 & 0.206 & 0.020 & 38 & 92 \\
+Summed deviation, $c=4$ & 0.909 & 0.095 & 0.196 & 0.020 & 35 & 92 \\
+Summed deviation, $c=16$ & 0.940 & 0.092 & 0.182 & 0.021 & 35 & 92 \\
+Static $\varepsilon$-constraint & 0.572 & 0.207 & 0.431 & 0.000 & 2 & 92 \\
+Constant bound & 1.008 & 0.072 & 0.160 & 0.022 & 40 & 91 \\
+Tightening bound & 0.619 & 0.255 & 0.450 & 0.000 & 1 & 92 \\
+Summed deviation + NSGA-II & 0.884 & 0.106 & 0.211 & 0.017 & 48 & 92 \\
+Summed deviation + MOEA/D & 0.783 & 0.162 & 0.303 & 0.035 & 11 & 88 \\
 \bottomrule
 \end{tabular}

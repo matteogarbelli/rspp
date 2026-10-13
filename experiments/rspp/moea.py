@@ -1,10 +1,11 @@
 """Multi-objective machinery: constrained dominance, NSGA-III, NSGA-II, MOEA/D.
 
-Everything here is written out explicitly rather than delegated to a library
-because two of the paper's claims are claims *about the selection operator*:
-that a generation-wide positive multiplier on an objective cannot steer it
-(Proposition 1), and that a corridor constraint can (Proposition 2).  Those are
-only checkable if the operator is inspectable and instrumentable.
+Everything here is written out explicitly because two of the article's results
+concern the selection operator: a generation-wide positive multiplier on an
+objective leaves constrained non-dominated sorting unchanged (Proposition 1),
+whereas a corridor constraint changes it (Proposition 2).  NSGA-III
+normalisation can still respond to the multiplier (Section 4.2).  Both results
+are checkable only if the operator can be inspected and instrumented.
 """
 from __future__ import annotations
 
@@ -34,7 +35,7 @@ def dominates(a, b):
 
 
 def constrained_fronts(F, V, tol=1e-12):
-    """Non-dominated sorting under the Constraint Dominance Principle (Deb 2002).
+    """Non-dominated sorting under the Constraint Dominance Principle (Deb 2000).
 
     x constraint-dominates y iff
       (i)   both feasible and x Pareto-dominates y; or
@@ -42,9 +43,9 @@ def constrained_fronts(F, V, tol=1e-12):
       (iii) both infeasible and V(x) < V(y).
 
     Feasible individuals are sorted into Pareto fronts; infeasible ones follow,
-    ordered by violation magnitude.  This partition is *not* invariant under a
-    positive rescaling of any objective, which is exactly why the corridor can
-    steer selection where a scalar weight cannot.
+    ordered by violation magnitude.  The partition is invariant under a positive
+    rescaling of any objective (Proposition 1), but not under a change of the
+    violation V, through which the corridor acts (Proposition 2).
     """
     F = np.asarray(F, dtype=float)
     V = np.asarray(V, dtype=float)
@@ -85,7 +86,11 @@ def constrained_fronts(F, V, tol=1e-12):
 
 # ------------------------------------------------------------------- NSGA-III
 class Nsga3State:
-    """Carries the running ideal point across generations, as NSGA-III requires."""
+    """Carries the running ideal point across generations, as NSGA-III requires.
+
+    The stored point is not rescaled when an objective's weight changes
+    (Section 4.2).
+    """
 
     def __init__(self, n_obj):
         self.ideal = np.full(n_obj, np.inf)
@@ -202,9 +207,15 @@ def nsga2_survivors(F, V, n_survive, rng):
 
 
 # -------------------------------------------------------------------- MOEA/D
-def tchebycheff(f, w, ideal):
+def tchebycheff(f, w, ideal, nadir=None):
+    """Weighted Tchebycheff distance to the ideal point.  With ``nadir``, each
+    objective is first divided by its ideal-to-nadir range."""
     w = np.where(w <= 1e-9, 1e-9, w)
-    return float(np.max(w * np.abs(np.asarray(f, float) - ideal)))
+    d = np.abs(np.asarray(f, float) - ideal)
+    if nadir is not None:
+        span = np.asarray(nadir, float) - ideal
+        d = d / np.where(span <= 1e-12, 1.0, span)
+    return float(np.max(w * d))
 
 
 def moead_neighbourhoods(weights, t_size):
@@ -305,9 +316,9 @@ def front_index(F, V):
     """Front number of every individual under constrained dominance.
 
     Deterministic: no RNG enters constrained non-dominated sorting.  This is
-    the quantity Propositions 1 and 2 are about -- a mechanism that cannot move
-    an individual between fronts cannot steer the search through selection
-    pressure, whatever it does to the numerical objective values.
+    the quantity Propositions 1 and 2 are about.  NSGA-III survivor selection
+    also depends on the normalisation of the last front, which this index does
+    not capture (Section 4.2).
     """
     rank = np.empty(len(F), dtype=int)
     for r, fr in enumerate(constrained_fronts(F, V)):

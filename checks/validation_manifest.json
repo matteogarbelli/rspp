@@ -1,0 +1,30 @@
+{
+  "phase": "public mathematical and implementation checks; no production optimisation",
+  "seed": 20261007,
+  "kernel_trials": 100,
+  "algebra_trials": 100,
+  "resampling_trials": 100,
+  "relabel_trials": 100,
+  "geometric_trials": 100,
+  "absolute_tolerance": 1e-09,
+  "relative_tolerance": 1e-12,
+  "subdivision_steps": [
+    2.0,
+    5.0,
+    10.0,
+    20.0
+  ],
+  "reference_step": 0.5,
+  "production_database": "experiments/results/campaign.jsonl.gz",
+  "required_studies": [
+    "main",
+    "metric",
+    "init",
+    "resample",
+    "budget",
+    "scale"
+  ],
+  "production_seeds": 30,
+  "timing_seeds": 5,
+  "study_arm": "sum_lambda"
+}

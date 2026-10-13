@@ -1,11 +1,9 @@
-"""Polyline construction, metric projection, and controlled arc-length resampling.
+"""Polyline construction, metric projection and vertex-preserving resampling.
 
-Reviewer #4 asked for "a metric projection or geodesic distance and a
-controlled resampling procedure".  Benchmark instances live natively in a
-planar metric frame (metres), so projection is the identity there;
-``project_wgs84_to_enu`` supplies a local East-North frame for the industrial
-instances.  Resampling is by arc length, which is what makes Proposition 4
-(discrete-to-continuous Frechet convergence) applicable.
+The synthetic instances live natively in a planar metric frame (metres), so no
+projection is applied to them; ``project_wgs84_to_enu`` provides a local
+East-North frame for geographic coordinates.  Resampling is vertex-preserving
+subdivision (Section 3.3), under which the error bound of Proposition 5 holds.
 """
 from __future__ import annotations
 
@@ -17,11 +15,9 @@ _EARTH_R = 6_371_008.8  # mean Earth radius, metres (IUGG)
 def project_wgs84_to_enu(latlng, origin=None):
     """Equirectangular East-North projection about a local origin.
 
-    Accurate to well under a metre over a service region of a few tens of km,
-    which is the regime of a single work shift.  Crucially it is *isotropic*:
-    the raw-degree Euclidean distance it replaces stretches longitude by
-    1/cos(lat) ~ 1.4 at 45 deg N, silently distorting every Frechet value
-    computed in the previous version of this work.
+    Isotropic, unlike Euclidean distance on raw degrees, which weights
+    longitude by 1/cos(lat) relative to latitude (about 1.4 at 45 degrees N).
+    Not used by the synthetic instances, whose coordinates are already planar.
     """
     arr = np.asarray(latlng, dtype=np.float64)
     lat, lng = arr[:, 0], arr[:, 1]
@@ -34,9 +30,8 @@ def project_wgs84_to_enu(latlng, origin=None):
 def route_polyline(route, coords, depot=0):
     """Vertex polyline of a route, depot-anchored at both ends.
 
-    On the benchmark instances travel is straight-line, so the vertex polyline
-    *is* the travelled path; on the industrial instances the same function is
-    fed road-network geometry decoded from the routing provider's polylines.
+    On the synthetic instances travel is straight-line, so the vertex polyline
+    is the travelled path.
     """
     idx = [depot] + list(route) + [depot]
     return np.asarray(coords)[idx]
@@ -86,11 +81,9 @@ def resample_fixed(curve, n_pts):
 
 
 def diameter(coords):
-    """Geometric diameter of the service region, in metres.
+    """Largest Euclidean distance between two points of ``coords`` (metres).
 
-    The previous implementation used the largest *cost-matrix* entry instead,
-    which is a travel cost, not a geometric diameter -- the source of the
-    unsupported scale-invariance claim flagged by Reviewer #5.
+    Applied to the depot and the requests, this is D in Eq. (9).
     """
     pts = np.asarray(coords, dtype=np.float64)
     d = np.sqrt(((pts[:, None, :] - pts[None, :, :]) ** 2).sum(-1))

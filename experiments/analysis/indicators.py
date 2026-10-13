@@ -6,7 +6,7 @@ from scipy import stats
 
 from ..rspp.moea import epsilon_indicator, hypervolume, igd_plus, nondominated, spacing
 
-__all__ = ["normalise_bounds", "front_indicators", "vargha_delaney",
+__all__ = ["normalise_bounds", "front_indicators", "instance_front_indicators", "vargha_delaney",
            "friedman_nemenyi", "friedman_control", "wilcoxon_pair", "holm",
            "per_instance_comparison"]
 
@@ -50,6 +50,24 @@ def front_indicators(front, lo, hi, ref_front, ref_point=1.1):
                 n_front=len(A), n_raw=n_raw)
 
 
+def instance_front_indicators(runs):
+    """Assess one instance, using hard-feasible fronts for bounds and reference.
+
+    Failed runs count as empty fronts even if a heuristic stored its infeasible
+    objective vector. They cannot determine either normalisation or reference.
+    """
+    fronts = [r["front"] for r in runs if r.get("feasible") and r.get("front")]
+    if not fronts:
+        return None
+    lo, hi = normalise_bounds(fronts)
+    ref = reference_front(fronts, lo, hi)
+    per_arm = {}
+    for r in runs:
+        front = r.get("front") if r.get("feasible") else []
+        per_arm.setdefault(r["arm"], []).append(front_indicators(front, lo, hi, ref))
+    return per_arm
+
+
 def vargha_delaney(a, b):
     """A_12: probability that a random draw from `a` exceeds one from `b`.
 
@@ -77,7 +95,7 @@ def magnitude(a12):
 def wilcoxon_pair(a, b):
     """Seed-paired Wilcoxon signed-rank test plus the effect size."""
     a, b = np.asarray(a, float), np.asarray(b, float)
-    if np.allclose(a, b):
+    if np.array_equal(a, b):
         return dict(p=1.0, a12=0.5, effect="negligible")
     try:
         p = float(stats.wilcoxon(a, b).pvalue)

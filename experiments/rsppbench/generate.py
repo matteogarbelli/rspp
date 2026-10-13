@@ -1,16 +1,16 @@
-"""RSPP-Bench: a public, seeded benchmark of baseline-vs-disrupted instance pairs.
+"""Seeded generator of baseline-disruption instance pairs (Section 7).
 
-Public routing benchmarks are single-shot: they give a problem, not a problem
-*and the plan that was already running when it changed*.  Evaluating a stability-
-preserving method needs the pair.  RSPP-Bench supplies it, and supplies it
-reproducibly: every instance is a pure function of its seed, so the whole suite
-regenerates byte-identically from the manifest on a clean checkout.
+Standard routing instances give a problem, not a problem together with the plan
+that was running when it changed.  Each pair generated here supplies both.
+Every instance is a pure function of its seed, so the suite regenerates
+byte-identically; ``make bench`` checks this against the manifest.
 
 Naming:  <layout><n>-<K>v-<family><k>-s<seed>
   layout  C clustered | R uniform | RC mixed          (after Solomon's taxonomy)
   family  INS new requests | WDR vehicle withdrawal | SRG demand surge
 
-Usage:  python -m experiments.rsppbench.generate --out data/rsppbench
+Usage:  python -m experiments.rsppbench.generate --out <directory>
+        (``make bench`` writes to outputs/regenerated_instances)
 """
 from __future__ import annotations
 
@@ -92,16 +92,13 @@ def make_pair(layout, n, n_vehicles, family, k_new, seed):
 # ------------------------------------------------------------------- the suite
 #
 # The suite is a full factorial: every spatial layout crossed with every
-# disruption family at every size.  An earlier version sampled 8 of these 27
-# cells, which left the demand-surge family represented by a single instance and
-# made every family comparison inseparable from layout and size.  A claim of the
-# form "the gain is largest on demand surge" needs the surge family to appear at
-# every layout and every size, or it is a statement about one instance.
+# disruption family at every size, so that each family appears at every layout
+# and every size.
 SIZES = [(50, 4), (100, 7), (200, 12)]          # (customers, crew)
 LAYOUTS_ORDER = ["C", "R", "RC"]
 
-# Disruption magnitude scales with the instance so that the *relative* severity
-# is comparable across sizes: ~10% of the request set for INS, ~12% for SRG.
+# Disruption magnitude scales with the instance: INS adds 10%, 8% and 7.5% of
+# the requests at n = 50, 100 and 200; SRG affects 12% at every size.
 K_NEW = {"INS": {50: 5, 100: 8, 200: 15},
          "SRG": {50: 6, 100: 12, 200: 24},
          "WDR": {50: 0, 100: 0, 200: 0}}       # WDR magnitude is one vehicle
@@ -120,8 +117,7 @@ SUITE = [(layout, n, K, fam, K_NEW[fam][n])
 # balancing descent that drives the plan in force to a local optimum of the
 # planner objective costs about 2 s at n = 100 and 27 s at n = 200, so a
 # thousand-customer pair would take hours to generate and its baseline would be
-# the only expensive thing in the suite.  Four doublings of n is the range this
-# construction supports.
+# the only expensive thing in the suite.  n = 400 is the largest size generated.
 SCALE_SUITE = [
     ("C",  400, 20, "INS", 30),
     ("R",  400, 20, "INS", 30),

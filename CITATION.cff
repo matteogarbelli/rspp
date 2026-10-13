@@ -1,8 +1,26 @@
 cff-version: 1.2.0
-message: "Please cite the associated RSPP article when using this research package."
-title: "RSPP synthetic benchmark and reference implementation"
+message: "If you use this software or data, please cite the associated article and this repository."
+title: "RSPP: code and data for The Route Similarity Preservation Problem"
 type: software
+version: 1.1.0
+license:
+  - MIT
+  - CC-BY-4.0
+repository-code: "https://github.com/matteogarbelli/rspp"
 authors:
   - family-names: Garbelli
     given-names: Matteo
-abstract: "Synthetic inputs, archived results and reference implementation for geometric route similarity preservation."
+    orcid: "https://orcid.org/0000-0003-1642-0846"
+abstract: >-
+  Standalone research implementation, seeded instance generator, 30 synthetic
+  baseline-disruption instance pairs and a 12,735-record reported campaign for
+  the article "The Route Similarity Preservation Problem: geometric deviation
+  as an objective in evolutionary vehicle routing replanning". The code is
+  MIT-licensed; other files use CC BY 4.0 (LICENSE-DATA).
+keywords:
+  - vehicle routing
+  - dynamic replanning
+  - route consistency
+  - trajectory similarity
+  - multi-objective evolutionary optimisation
+  - constraint handling
